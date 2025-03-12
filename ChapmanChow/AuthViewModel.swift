@@ -11,7 +11,7 @@ class AuthViewModel: ObservableObject {
     }
     
     func signIn(email: String, password: String, completion: @escaping (Bool, String?) -> Void) {
-        if email == "randallstaff" && password == "gciprojectchapmanchow" {
+        if email == "randallstaff" && password == "gci" {
             self.isAuthenticated = true
             completion(true, nil)
         } else {
