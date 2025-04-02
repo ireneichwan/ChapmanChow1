@@ -27,8 +27,23 @@ struct ContentView: View {
         }
     }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+struct YourApp: App {
+    @StateObject var authViewModel = AuthViewModel()
+    
+    var body: some Scene {
+        WindowGroup {
+            Group {
+                if authViewModel.isAuthenticated {
+                    if authViewModel.isStaff {
+                        StaffHomeView()
+                    } else {
+                        HomeView()
+                    }
+                } else {
+                    LoginView()
+                }
+            }
+            .environmentObject(authViewModel)
+        }
     }
 }

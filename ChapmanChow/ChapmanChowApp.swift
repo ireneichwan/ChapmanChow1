@@ -11,15 +11,18 @@ struct ChapmanChowApp: App {
 
     var body: some Scene {
         WindowGroup {
-            if authViewModel.isAuthenticated {
-                NavigationView {  // Ensure NavigationView is here
-                    HomeView()
-                }
-                .environmentObject(authViewModel)
-            } else {
-                LoginView()
+            #if os(iOS)
+            NavigationView {
+                RootView()
                     .environmentObject(authViewModel)
             }
+            .navigationViewStyle(.stack)
+            #else
+            // For macOS and other platforms
+            RootView()
+                .environmentObject(authViewModel)
+                .frame(minWidth: 800, minHeight: 600) // Optional: Set minimum window size
+            #endif
         }
     }
 }

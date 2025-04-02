@@ -1,49 +1,65 @@
-//
-//  LoginView.swift
-//  ChapmanChow
-//
-//  Created by Irene Ichwan on 2/12/25.
-//
 import SwiftUI
 
 struct LoginView: View {
-    @State private var email = ""
+    @State private var username = ""
     @State private var password = ""
     @State private var errorMessage: String?
+    @State private var showStaffLogin = false
+    @State private var loginError = false
     @EnvironmentObject var authViewModel: AuthViewModel
     
     var body: some View {
-        VStack {
-            Text("ChapmanChow")
-                .font(.largeTitle)
-                .bold()
-                .padding()
-
-            TextField("Email", text: $email)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-
-            SecureField("Password", text: $password)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-
-            if let errorMessage = errorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.red)
-            }
-
-            Button("Login") {
-                authViewModel.signIn(email: email, password: password) { success, error in
-                    if !success {
-                        errorMessage = error
+        NavigationStack {
+            VStack(spacing: 20) {
+                // Header
+                Text("ChapmanChow")
+                    .font(.largeTitle)
+                    .bold()
+                    .padding(.top, 40)
+                
+                // Login Form
+                VStack(spacing: 16) {
+                    TextField("Username", text: $username)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    
+                    
+                    SecureField("Password", text: $password)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    
+                    if let errorMessage = errorMessage {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
                     }
                 }
+                .padding(.horizontal)
+                
+                // Login Button
+                Button("Login") {
+                    authViewModel.signIn(username: username, password: password) { success, error in
+                        if !success {
+                            errorMessage = error
+                        }
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal)
+                
+                // Student Button
+                Button("Continue as Student") {
+                    authViewModel.studentLogin()
+                }
+                .buttonStyle(.bordered)
+                .tint(.green)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal)
+                
+                Spacer()
             }
-            .buttonStyle(.borderedProminent)
             .padding()
-
+            .navigationDestination(isPresented: $authViewModel.isAuthenticated) {
+                HomeView()
+            }
         }
-        .padding()
     }
 }
-

@@ -1,11 +1,9 @@
 //
 //  Helper.swift
-//  A small collection of quick helpers to avoid repeating the same old code.
+//  ChapmanChow
 //
-//  Created by Paul Hudson on 23/06/2019.
-//  Copyright © 2019 Hacking with Swift. All rights reserved.
+//  Created by Irene Ichwan on 4/2/25.
 //
-
 import AppKit
 
 extension Bundle {
