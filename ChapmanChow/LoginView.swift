@@ -10,55 +10,62 @@ struct LoginView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
-                // Header
-                Text("ChapmanChow")
-                    .font(.largeTitle)
-                    .bold()
-                    .padding(.top, 40)
+            ZStack {
+                Color(red:157/255, green: 34/255, blue: 53/255)
+                    .ignoresSafeArea(edges: .all)
                 
-                // Login Form
-                VStack(spacing: 16) {
-                    TextField("Username", text: $username)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                VStack(spacing: 20) {
+                    // Header
+                    Text("ChapmanChow")
+                        .font(.largeTitle)
+                        .bold()
+                        .padding(.top, 40)
                     
-                    
-                    SecureField("Password", text: $password)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                    
-                    if let errorMessage = errorMessage {
-                        Text(errorMessage)
-                            .foregroundColor(.red)
-                    }
-                }
-                .padding(.horizontal)
-                
-                // Login Button
-                Button("Login") {
-                    authViewModel.signIn(username: username, password: password) { success, error in
-                        if !success {
-                            errorMessage = error
+                    // Login Form
+                    VStack(spacing: 16) {
+                        TextField("Username", text: $username)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .background(Color.white.opacity(0.15))
+                        
+                        
+                        SecureField("Password", text: $password)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .background(Color.white.opacity(0.15))
+                        
+                        if let errorMessage = errorMessage {
+                            Text(errorMessage)
+                                .foregroundColor(.red)
                         }
                     }
+                    .padding(.horizontal)
+                    
+                    // Login Button
+                    Button("Login") {
+                        authViewModel.signIn(username: username, password: password) { success, error in
+                            if !success {
+                                errorMessage = error
+                            }
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal)
+                    
+                    // Student Button
+                    Button("Continue as Student") {
+                        authViewModel.studentLogin()
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.green)
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal)
+                    
+                    Spacer()
                 }
-                .buttonStyle(.borderedProminent)
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal)
-                
-                // Student Button
-                Button("Continue as Student") {
-                    authViewModel.studentLogin()
+                .padding()
+                .navigationDestination(isPresented: $authViewModel.isAuthenticated) {
+                    HomeView()
                 }
-                .buttonStyle(.bordered)
-                .tint(.green)
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal)
-                
-                Spacer()
-            }
-            .padding()
-            .navigationDestination(isPresented: $authViewModel.isAuthenticated) {
-                HomeView()
             }
         }
     }
