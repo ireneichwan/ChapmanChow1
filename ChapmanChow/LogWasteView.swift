@@ -28,41 +28,50 @@ struct LogWasteView: View {
             Color(red: 157/255, green: 34/255, blue: 53/255)
                 .ignoresSafeArea()
             
-            Form {
-                Section(header: Text("Waste Details").foregroundColor(.white)) {
-                    TextField("Items Wasted (comma separated)", text: $itemsWasted)
-                    TextField("Estimated Quantity", text: $quantity)
-                    
-                }
-                
-                Section(header: Text("Additional Notes").foregroundColor(.white)) {
-                    TextEditor(text: $notes)
-                        .frame(minHeight: 150)
-                        .overlay(
-                            notes.isEmpty ?
-                            Text("Enter any observations about why this was wasted...")
-                                .foregroundColor(.gray.opacity(0.5))
-                                .padding(.leading, 4)
-                                .allowsHitTesting(false)
-                            : nil,
-                            alignment: .topLeading
-                        )
-                }
-                
-                Section {
-                    Button(action: submitWasteLog) {
-                        Text("Submit Waste Log")
-                            .frame(maxWidth: .infinity)
+            VStack {
+                Form {
+                    Section(header: Text("Waste Details").foregroundColor(.white)) {
+                        //.font(.headline)
+                        //.foregroundColor(.white)) {
+                        TextField("Items Wasted (comma separated)", text: $itemsWasted)
+                        TextField("Estimated Quantity", text: $quantity)
                     }
-                    .disabled(itemsWasted.isEmpty || quantity.isEmpty)
-                    .buttonStyle(.borderedProminent)
-                    .listRowBackground(Color.clear)
+                    
+                    Section(header: Text("Additional Notes").foregroundColor(.white)) {
+                        // .font(.headline)
+                        //.foregroundColor(.white)) {
+                        TextEditor(text: $notes)
+                            .frame(minHeight: 150)
+                            .overlay(
+                                notes.isEmpty ?
+                                Text("Enter any observations about why this was wasted...")
+                                    .foregroundColor(.gray.opacity(0.5))
+                                    .padding(.leading, 4)
+                                    .allowsHitTesting(false)
+                                : nil,
+                                alignment: .topLeading)
+                    }
                 }
+                .scrollContentBackground(.hidden)
+                .foregroundColor(.white)
+                .frame(maxWidth: 700)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 16)
+                
+                Button(action: submitWasteLog) {
+                    Text("Submit Waste Log")
+                        .fontWeight(.semibold)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(Color.white)
+                        .foregroundColor(Color(red: 157/255, green: 34/255, blue: 53/255))
+                        .cornerRadius(10)
+                }
+                .padding()
+                .buttonStyle(PlainButtonStyle())
             }
-            .scrollContentBackground(.hidden)
-            .foregroundColor(.white)
+            
             .navigationTitle("Log Food Waste")
-      
             .alert("Log Submitted", isPresented: $showingConfirmation) {
                 Button("OK") { dismiss() }
             } message: {
@@ -80,29 +89,33 @@ struct LogWasteView: View {
             date: Date()
         )
         
-        // Save to UserDefaults (replace with API call in production)
-        var currentLogs = UserDefaults.standard.loadWasteLogs()
+        var currentLogs = WasteLog.loadFromFile()
         currentLogs.append(newLog)
-        UserDefaults.standard.saveWasteLogs(currentLogs)
+        WasteLog.saveToFile(currentLogs)
         
         showingConfirmation = true
     }
 }
 
-// UserDefaults extensions for persistence
-extension UserDefaults {
-    func saveWasteLogs(_ logs: [WasteLog]) {
-        if let encoded = try? JSONEncoder().encode(logs) {
-            set(encoded, forKey: "wasteLogs")
-        }
+extension WasteLog {
+    static let fileName = "wasteLogs.json"
+    
+    static func getDocumentsDirectory() -> URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     }
     
-    func loadWasteLogs() -> [WasteLog] {
-        if let data = data(forKey: "wasteLogs"),
-           let decoded = try? JSONDecoder().decode([WasteLog].self, from: data) {
-            return decoded
+    static func loadFromFile() -> [WasteLog] {
+        let url = getDocumentsDirectory().appendingPathComponent(fileName)
+        guard let data = try? Data(contentsOf: url) else { return [] }
+        let decoded = try? JSONDecoder().decode([WasteLog].self, from: data)
+        return decoded ?? []
+    }
+    
+    static func saveToFile(_ logs: [WasteLog]) {
+        let url = getDocumentsDirectory().appendingPathComponent(fileName)
+        if let encoded = try? JSONEncoder().encode(logs) {
+            try? encoded.write(to: url, options: [.atomicWrite, .completeFileProtection])
         }
-        return []
     }
 }
 
