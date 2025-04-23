@@ -36,7 +36,7 @@ struct RequestMealView: View {
                             CustomTextField(placeholder: "Last Name", text: $lastName)
                         }
                         .padding()
-                        .background(Color.white.opacity(0.9))
+                        .background(Color.white.opacity(0.3))
                         .cornerRadius(12)
                         .padding(.horizontal)
                         
@@ -46,6 +46,7 @@ struct RequestMealView: View {
                                 .font(.headline)
                                 .foregroundColor(.white)
                             
+                            
                             TextEditor(text: $requestedMeal)
                                 .frame(height: 100)
                                 .cornerRadius(8)
@@ -53,10 +54,13 @@ struct RequestMealView: View {
                                     RoundedRectangle(cornerRadius: 8)
                                         .stroke(Color.gray.opacity(0.3), lineWidth: 1)
                                 )
-                                .background(Color.white)
+                                //.background(Color.white)
+                             
+                            
                         }
+                        .environment(\.colorScheme, .light)
                         .padding()
-                        .background(Color.white.opacity(0.9))
+                        .background(Color.white.opacity(0.3))
                         .cornerRadius(12)
                         .padding(.horizontal)
                     }
@@ -77,6 +81,7 @@ struct RequestMealView: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 30)
             .shadow(radius: 5)
+            .buttonStyle(PlainButtonStyle())
         }
         .navigationTitle("")
         .alert("Request Submitted", isPresented: $showConfirmation) {
@@ -102,6 +107,7 @@ struct RequestMealView: View {
             TextField(placeholder, text: $text)
                 .padding()
                 .background(Color.white)
+                .foregroundColor(Color.black)
                 .cornerRadius(8)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
