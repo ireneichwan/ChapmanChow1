@@ -19,19 +19,19 @@ struct MenuItemView: View {
                     // Like button
                     Button(action: { isLiked = isLiked == true ? nil : true }) {
                         Image(systemName: isLiked == true ? "hand.thumbsup.fill" : "hand.thumbsup")
-                            .foregroundColor(isLiked == true ? .blue : .gray)
+                            .foregroundColor(isLiked == true ? .blue : .white)
                     }
                     
                     // Dislike button
                     Button(action: { isLiked = isLiked == false ? nil : false }) {
                         Image(systemName: isLiked == false ? "hand.thumbsdown.fill" : "hand.thumbsdown")
-                            .foregroundColor(isLiked == false ? .red : .gray)
+                            .foregroundColor(isLiked == false ? .red : .white)
                     }
                     
                     // Favorite button
                     Button(action: toggleFavorite) {
                         Image(systemName: isFavorite ? "star.fill" : "star")
-                            .foregroundColor(isFavorite ? .yellow : .gray)
+                            .foregroundColor(isFavorite ? .yellow : .white)
                     }
                 }
             }
