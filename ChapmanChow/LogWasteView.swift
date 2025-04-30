@@ -56,7 +56,7 @@ struct LogWasteView: View {
                 .foregroundColor(.white)
                 .frame(maxWidth: 700)
                 .padding(.horizontal, 16)
-                .padding(.vertical, 16)
+                .padding(.vertical, 120)
                 
                 Button(action: submitWasteLog) {
                     Text("Submit Waste Log")
@@ -126,3 +126,4 @@ struct LogWasteView_Previews: PreviewProvider {
         }
     }
 }
+
