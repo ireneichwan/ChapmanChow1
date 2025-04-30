@@ -112,3 +112,4 @@ struct HomeButton: View {
 }
 
 // Placeholder views implementation remains the same
+
